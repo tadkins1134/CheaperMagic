@@ -16,5 +16,3 @@ async def on_message(message):
 
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
-
-client.run('MTQ4ODAwMjQ4ODIyNDE4NjQ3MA.GIXaqi.wTjMIfb2QTGwLYklhSV1eo84MsyXuMrETRRxXM')

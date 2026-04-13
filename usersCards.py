@@ -64,6 +64,3 @@ async def clearCards(ctx, card):
 #This method is used by the user to scrape TCGPlayer for the cards in their list and return any that are at or below the price they set.
 @magicBot.command(name='getMyCards')
 async def cardSiteScraper():
-
-
-magicBot.run('MTQ4ODAwMjQ4ODIyNDE4NjQ3MA.GIXaqi.wTjMIfb2QTGwLYklhSV1eo84MsyXuMrETRRxXM')
