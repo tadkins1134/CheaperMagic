@@ -111,8 +111,6 @@ async def commandList(ctx):
         "$getCardsData - Fetch current market data for the cards in your list and compare to your desired prices.",
     ]
     await ctx.send("Available commands:\n" + "\n".join(commands))
-    
-
 
 if __name__ == "__main__":
     magicBot.run(os.getenv('USER_TOKEN'))
