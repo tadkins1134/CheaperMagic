@@ -77,20 +77,36 @@ async def cardsData(ctx):
         return
     url = f"{BASE_URL}/cards"
     userCardList = user[ctx.author]
+    skipArtSeries = 0
+    maxAttempts = 5
+    attempts = 0
     for card in userCardList:
         params = {
             "q": card.name,
             "orderBy": "price",
             "order": "asc",
             "limit": 1,
-            "game": "mtg"
+            "game": "mtg",
+            "condition": "Near Mint, Lightly Played, Moderately Played"
         }
         try:
             response = requests.get(url, headers=HEADERS, params=params)
             response.raise_for_status()
-            cards = response.json()["data"]
-            if cards:
-                lowest_priced_variant = min(cards[0]["variants"], key=lambda x: x["price"])
+            cardData = response.json()["data"]
+            while cardData and 'Art Series' in cardData[0]['set_name']:
+                skipArtSeries += 1
+                params["offset"] = skipArtSeries
+                response = requests.get(url, headers=HEADERS, params=params)
+                response.raise_for_status()
+                cardData = response.json()["data"]
+
+                attempts += 1
+                if attempts >= maxAttempts:
+                    print("Too many Art Series results, stopping...")
+                    break
+            if cardData:
+                print(cardData)
+                lowest_priced_variant = min(cardData[0]["variants"], key=lambda x: x["price"])
                 market_price = lowest_priced_variant["price"]
                 if market_price <= float(card.price):
                     await ctx.send(f'{card.name} is available for ${market_price}, which is at or below your desired price of ${card.price}.')
