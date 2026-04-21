@@ -1,5 +1,5 @@
 # CheaperMagic
-This is a discord bot that will poll for magic cards of interest and update the user that the card is around a decent price
+This is a discord bot that will pull data for magic cards in a users list and allow them to give a price and comapre the data to let them know a card is available under or above their desired price.
 
 TODO:
 1. COMPLETED: ~~Setup the bot to allow users to track their own list of cards with a given desired price~~
