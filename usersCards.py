@@ -70,8 +70,8 @@ async def clearCards(ctx, card):
 
 
 #This method is used by the user to scrape TCGPlayer for the cards in their list and return any that are at or below the price they set.
-@magicBot.command(name='getCardsData')
-async def cardsData(ctx):
+@magicBot.command(name='cardListData')
+async def cardListData(ctx):
     if ctx.author not in user:
         await ctx.send("You don't have any cards in your list. Please add cards before using this command.")
         return
@@ -117,7 +117,42 @@ async def cardsData(ctx):
         except requests.exceptions.RequestException as e:
             await ctx.send(f"An error occurred while fetching data for {card.name}: {e}")
 
+@magicBot.command(name='single')
+async def singleCardData(ctx, *, arg):
+    # if ctx.author not in user:
+    #     await ctx.send("You don't have any cards in your list. Please add cards before using this command.")
+    #     return
+    url = f"{BASE_URL}/cards" 
 
+    params = {
+            "q": arg,
+            "condition": "Near Mint, Lightly Played, Moderately Played"
+        }
+    response = requests.get(url, headers=HEADERS, params=params)
+    cardData = response.json()["data"]
+
+    highest_priced_variant = None
+    lowest_priced_variant = None
+    highest_card = None
+    lowest_card = None
+    for card in cardData:
+        if card["name"].lower() != arg.lower():
+            continue
+
+        for variant in card["variants"]:
+
+            # HIGH
+            if highest_priced_variant is None or variant["price"] > highest_priced_variant["price"]:
+                highest_priced_variant = variant
+                highest_card = card   # <-- THIS is where set_name comes from
+
+            # LOW
+            if lowest_priced_variant is None or variant["price"] < lowest_priced_variant["price"]:
+                lowest_priced_variant = variant
+                lowest_card = card
+
+    await ctx.send(f"{card['name']}: Highest price - ${highest_priced_variant['price']} ({highest_priced_variant['printing']}, {highest_priced_variant['condition']}), in set ({highest_card['set_name']}),  Lowest price - ${lowest_priced_variant['price']} ({lowest_priced_variant['printing']}, {lowest_priced_variant['condition']}),  in set ({lowest_card['set_name']})")
+            
 @magicBot.command(name='commandList')
 async def commandList(ctx):
     commands = [
