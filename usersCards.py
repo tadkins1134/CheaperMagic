@@ -160,6 +160,7 @@ async def commandList(ctx):
         "$myCards - View the cards in your list.",
         "$clearCards <card name>/all - Remove a specific card or all cards from your list.",
         "$getCardsData - Fetch current market data for the cards in your list and compare to your desired prices.",
+        "$single <card name> - Fetch the highest and lowest market price for a single card."
     ]
     await ctx.send("Available commands:\n" + "\n".join(commands))
 
